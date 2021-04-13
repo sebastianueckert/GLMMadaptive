@@ -951,12 +951,14 @@ predict.MixMod <- function (object, newdata, newdata2 = NULL,
             if (!is.null(object$gammas)) {
                 stop("the predict() method is not yet implemented for models with an extra zero-part.")
             }
-            mcoefs <- marginal_coefs(object, std_errors = TRUE, ...)
+            mcoefs <- marginal_coefs(object, std_errors = se.fit, ...)
             betas <- coef(mcoefs)
-            var_betas <- mcoefs$var_betas
             pred <- if (type_pred == "link") c(X %*% betas) else object$family$linkinv(c(X %*% betas))
             names(pred) <- row.names(newdata)
-            se_fit <- if (se.fit) sqrt(diag(X %*% var_betas %*% t(X)))
+            if (se.fit) {
+                var_betas <- mcoefs$var_betas
+                se_fit <-  sqrt(diag(X %*% var_betas %*% t(X)))
+            }
         }
     } else if (type == "zero_part") {
         if (is.null(object$gammas))
