@@ -88,6 +88,8 @@ score_mixed <- function (thetas, id, y, N, X, Z, offset, X_zi, Z_zi, offset_zi, 
     NN <- if (NCOL(y) == 2) nrow(y) else length(y)
     post_b <- apply(b, 2, function (b_k) colSums(t_p_by * matrix(b_k, ncol(Ztb), n) * wGH))
     post_b2 <- apply(b2, 2, function (b_k) colSums(t_p_by * matrix(b_k, ncol(Ztb), n) * wGH))
+    dim(post_b) <- c(n, ncol(b))
+    dim(post_b2) <- c(n, ncol(b2))
     if (!is.null(weights)) {
         post_b <- weights * post_b
         post_b2 <- weights * post_b2
